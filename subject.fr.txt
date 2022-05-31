@@ -1,0 +1,56 @@
+Assignment name  : microshell
+Expected files   : *.c *.h
+Allowed functions: malloc, free, write, close, fork, waitpid, signal, kill, exit, chdir, execve, dup, dup2, pipe, strcmp, strncmp
+--------------------------------------------------------------------------------------
+
+1) Ecrire un programme qui aura ressemblera à un executeur de commande shell
+
+2) La ligne de commande à executer sera passer en argument du programme
+
+3) Les executables seront appelés avec un chemin relatif ou absolut mais votre programme ne devra pas construire de chemin (en utilisant la variable d environment PATH par exemple)
+
+4) Votre programme doit implementer "|" et ";" comme dans bash
+	- Nous n'essaierons jamais un "|" immédiatement suivi ou précédé par rien ou un autre "|" ou un ";"
+
+5) Votre programme doit implementer la commande "built-in" cd et seulement avec un chemin en argument (pas de '-' ou sans argument)
+
+	5.1) si cd n'a pas le bon nombre d'argument votre programme devra afficher dans STDERR 
+		a) "error: cd: bad arguments" 
+		b) suivi d'un '\n'
+
+	5.2) si cd a echoué votre programme devra afficher dans STDERR 
+		a) "error: cd: cannot change directory to path_to_change" 
+		b) suivi d'un '\n' 
+		c) avec path_to_change remplacer par l'argument à cd
+
+	5.3) une commande cd ne sera jamais immédiatement précédée ou suivie par un "|"
+
+6) Votre programme n'a pas à gerer les "wildcards" (*, ~ etc...)
+
+7) Votre programme n'a pas à gerer les variables d'environment ($BLA ...)
+
+8) Si un appel systeme (SAUF: execve et chdir) retourne une erreur votre programme devra immédiatement afficher dans STDERR
+	a) "error: fatal" 
+	b) suivi d'un '\n' 
+	c) et sortir
+
+9) Si execve echoue votre programme doit afficher dans STDERR 
+	a) "error: cannot execute executable_that_failed" 
+	b) suivi d'un '\n' en 
+	c) ayant remplacé executable_that_failed avec le chemin du programme qui n'a pu etre executé (ca devrait etre le premier argument de execve)
+
+10) Votre programme devrait pouvoir accepter des centaines de "|" meme si la limite du nombre de "fichier ouvert" est inferieur à 30.
+
+--------------------------------------------------------------------------------------
+Par exemple, la commande suivante doit marcher:
+$>./microshell /bin/ls "|" /usr/bin/grep microshell ";" /bin/echo i love my microshell
+microshell
+i love my microshell
+$>
+--------------------------------------------------------------------------------------
+Conseils:
+N'oubliez pas de passer les variables d'environment à execve
+--------------------------------------------------------------------------------------
+Conseils:
+Ne fuitez pas de file descriptor!
+--------------------------------------------------------------------------------------
